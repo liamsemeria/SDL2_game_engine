@@ -3,10 +3,11 @@
 class Entity {
     SDL_Point pos;
     SDL_Point velocity;
+    SDL_Point acceleration;
 
     public:
         Entity(SDL_Point pos, SDL_Point velocity);
-        void update(); // this function is called every frame, and is meant to be overloaded
+        void update(float dt); // this function is called every frame, and is meant to be overloaded
         void on_collision(); // this function is called whenever the entity collides with another
         
     // getters and setters

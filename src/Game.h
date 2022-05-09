@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <vector>
+#include <chrono>
 // homemade
 #include "Entity.h"
 
@@ -18,6 +19,7 @@ class Game {
     SDL_Texture *texture;
     // engine
     std::vector<Entity> entities;
+    float time_passed;
 
     public:
         static Game& get_instance();

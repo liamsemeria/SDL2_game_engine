@@ -72,7 +72,7 @@ Game::Game() {
     // create texture
     texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STATIC, sizex, sizey);
     // TEST
-    this->entities.push_back(Entity({200,200},{0,0}));
+    this->entities.push_back(Entity({800,300},{50,0}));
 }
 
 Game& Game::get_instance() {
@@ -82,8 +82,19 @@ Game& Game::get_instance() {
 
 void Game::run() {
     running = true;
+    long time = std::chrono::system_clock::now().time_since_epoch().count();
+    long prevtime;
+    long dt;
     while (running)
     {
+        // get delta time
+        prevtime = time;
+        time = std::chrono::system_clock::now().time_since_epoch().count();
+        dt = time - prevtime;
+        // update entities
+        for (int i = 0; i < entities.size(); i++) {
+            entities[i].update(float(dt) / 100000 ); // need to convert to micro? seconds here
+        }
         handle_events();
         render();
     }
