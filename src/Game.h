@@ -1,3 +1,6 @@
+#ifndef game
+#define game
+
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <vector>
@@ -32,3 +35,4 @@ class Game {
         void render();
         void handle_events();
 };
+#endif

@@ -73,6 +73,7 @@ Game::Game() {
     texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STATIC, sizex, sizey);
     // TEST
     this->entities.push_back(Entity({800,300},{50,0}));
+    this->entities.push_back(Entity({1000,600},{-50,0}));
 }
 
 Game& Game::get_instance() {
@@ -82,9 +83,13 @@ Game& Game::get_instance() {
 
 void Game::run() {
     running = true;
+    // deltatime
     long time = std::chrono::system_clock::now().time_since_epoch().count();
     long prevtime;
     long dt;
+    // collisions
+    //SDL_Point col_angle;
+
     while (running)
     {
         // get delta time
@@ -94,6 +99,17 @@ void Game::run() {
         // update entities
         for (int i = 0; i < entities.size(); i++) {
             entities[i].update(float(dt) / 100000 ); // need to convert to micro? seconds here
+        }
+        
+        // check for collisions
+        for (int i = 0; i < entities.size(); i++) {
+            // check every other entity
+            for (int j = i+1; j < entities.size(); j++) {
+                //std::cout << "proped" << std::endl;
+                //col_angle = check_collision(entities[i].get_collider(),entities[j].get_collider());
+                //if (col_angle.x != -1) std::cout << "collision" << std::endl;
+                
+            }
         }
         handle_events();
         render();

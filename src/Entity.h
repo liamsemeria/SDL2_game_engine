@@ -1,12 +1,17 @@
+#ifndef entity
+#define entity
+
 #include <SDL2/SDL.h>
 #include <vector>
-#include "physics.cpp"
+#include "Collider.h"
+
+// pos,active,simulated,radius
 
 class Entity {
     SDL_Point pos;
     SDL_Point velocity;
     SDL_Point acceleration;
-    //std::vector<Collider> colliders;
+    Collider col;
 
     public:
         Entity(SDL_Point pos, SDL_Point velocity);
@@ -18,4 +23,7 @@ class Entity {
         void set_pos(SDL_Point pos) {this->pos = pos;}
         SDL_Point get_velocity() {return this->velocity;}
         void set_velocity(SDL_Point velocity) {this->velocity = velocity;}
+        Collider get_collider() {return col;}
 };
+
+#endif

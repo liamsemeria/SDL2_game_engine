@@ -3,6 +3,7 @@
 Entity::Entity(SDL_Point pos, SDL_Point velocity) {
     this->pos = pos; this->velocity = velocity;
     this->acceleration = {0,0};
+    //this->col = {this->pos,true,true,20};
 }
 
 void Entity::update(float dt) {
