@@ -1,9 +1,12 @@
 #include <SDL2/SDL.h>
+#include <vector>
+#include "physics.cpp"
 
 class Entity {
     SDL_Point pos;
     SDL_Point velocity;
     SDL_Point acceleration;
+    //std::vector<Collider> colliders;
 
     public:
         Entity(SDL_Point pos, SDL_Point velocity);
