@@ -3,54 +3,44 @@
 
 #include <SDL2/SDL.h>
 #include <iostream>
-#include "helpers.h"
 
-class Collider {
-    protected:
+struct Collider;
+struct CircleCollider;
+struct BoxCollider;
+
+/*
+namespace:
+colliders are structs
+functions that compare colliders
+*/
+
+// circle circle
+SDL_Point check_collision(CircleCollider c0, CircleCollider c1);
+// circle box
+SDL_Point check_collision(BoxCollider c0, CircleCollider c1);
+// box box
+SDL_Point check_collision(BoxCollider c0, BoxCollider c1);
+
+
+struct  Collider {
     SDL_Point *pos;
-    bool active;
-    bool simulated;
-
-    public:
-        Collider() {std::cout << "Collider can't be initialized" << std::endl;}
-        // overloaded virtual functions need to have the same params
-        //virtual SDL_Point check_collision(Collider other) {return {-2,-2};};
-
-        // getters and setters
-        SDL_Point* getPos() {return this->pos;}
+    int n = 1;
+    bool active = true;
+    bool simulated = true;
 };
-#endif
 
-#ifndef circle_collider
-#define circle_collider
-
-class CircleCollider : public Collider{
-    protected:
+struct CircleCollider : public Collider{
     int radius;
-    public:
-    CircleCollider(int radius);
-    SDL_Point check_collision(CircleCollider other);
-    // how do i get box up here?
-
-    int getRadius() {return this->radius;}
+    CircleCollider() {radius = -1;}
+    CircleCollider(SDL_Point *pos, int radius) {
+        this->pos = pos;
+        this->radius = radius;
+    }
 };
 
-#endif
-
-#ifndef box_collider
-#define box_collider
-
-class BoxCollider : public Collider{
-    protected:
+struct BoxCollider : public Collider{
     int w;
     int h;
-    public:
-    BoxCollider(int w,int h);
-    SDL_Point check_collision(BoxCollider other);
-    SDL_Point check_collision(CircleCollider other);
-
-    int getWidth() {return this->w;}
-    int getHeight() {return this->h;}
 };
 
 #endif

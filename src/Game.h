@@ -27,12 +27,16 @@ class Game {
     public:
         static Game& get_instance();
         void run();
+        void reset();
+        // call these to interact with game entities
+        void instantiate(Entity e);
+        void destroy(Entity e);
     private:
         Game();
         Game(Game const&);
         void operator=(Game const &);
-        void end();
         void render();
         void handle_events();
+        void end();
 };
 #endif

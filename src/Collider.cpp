@@ -1,11 +1,29 @@
 #include "Collider.h"
+#include "helpers.h"
 
-CircleCollider::CircleCollider(int radius) {
-    this->radius = radius;
+// circle circle
+SDL_Point check(Collider c0, Collider c1) {
+    //return check_collision((CircleCollider) c0,(CircleCollider) c1);
+    return {0,0};
+} 
+
+SDL_Point check_collision(CircleCollider c0, CircleCollider c1) {
+    SDL_Point v = to_vector(*c0.pos,*c1.pos);
+    float m = magnitude(v);
+    if (m <= c0.radius + c1.radius) {
+        // avoid dividing by zero
+        if (m == 0) return {0,0};
+        return {v.x / (int) m, v.y / (int) m};
+    }
+    return NULL_PT;
 }
+// circle box
+SDL_Point check_collision(BoxCollider c0, CircleCollider c1) {
 
-SDL_Point CircleCollider::check_collision(CircleCollider other) {
-    SDL_Point* opos = other.getPos();
-    if (dist(*pos,*opos) < radius + other.getRadius()) {return {opos->x - pos->x, opos->y - pos->y};}
-    return {-1,-1};
+    return NULL_PT;
+}
+// box box
+SDL_Point check_collision(BoxCollider c0, BoxCollider c1) {
+
+    return NULL_PT;
 }

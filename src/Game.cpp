@@ -1,41 +1,14 @@
 #include "Game.h"
-// HELPERS
-// draws a filled circle
-// based off of: https://stackoverflow.com/questions/38334081/howto-draw-circles-arcs-and-vector-graphics-in-sdl
-void draw_circle(SDL_Renderer * renderer, int32_t centreX, int32_t centreY, int32_t radius)
-{
-   const int32_t diameter = (radius * 2);
-   int32_t x = (radius - 1);
-   int32_t y = 0;
-   int32_t tx = 1;
-   int32_t ty = 1;
-   int32_t error = (tx - diameter);
-   while (x >= y) {
-      //  Each of the following renders an octant of the circle
-      SDL_RenderDrawPoint(renderer, centreX + x, centreY - y);
-      SDL_RenderDrawPoint(renderer, centreX + x, centreY + y);
-      SDL_RenderDrawPoint(renderer, centreX - x, centreY - y);
-      SDL_RenderDrawPoint(renderer, centreX - x, centreY + y);
-      SDL_RenderDrawPoint(renderer, centreX + y, centreY - x);
-      SDL_RenderDrawPoint(renderer, centreX + y, centreY + x);
-      SDL_RenderDrawPoint(renderer, centreX - y, centreY - x);
-      SDL_RenderDrawPoint(renderer, centreX - y, centreY + x);
-      if (error <= 0) {
-         ++y;
-         error += ty;
-         ty += 2;
-      }
-      if (error > 0) {
-         --x;
-         tx += 2;
-         error += (tx - diameter);
-      }
-   }
-    // added code to fill circle:
-    //if (radius == 1) SDL_RenderDrawPoint(renderer, centreX, centreY);
-    //else draw_circle(renderer, centreX, centreY, radius-1);
+#include "helpers.h"
+
+// public functions
+
+void Game::instantiate(Entity e) {
+    this->entities.push_back(e);
 }
 
+
+// constructor
 Game::Game() {
     // change flags based on wether ot not fullscreen is true
     int flags = 0;
@@ -71,9 +44,6 @@ Game::Game() {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
     // create texture
     texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STATIC, sizex, sizey);
-    // TEST
-    this->entities.push_back(Entity({800,300},{50,0}));
-    this->entities.push_back(Entity({1000,600},{-50,0}));
 }
 
 Game& Game::get_instance() {
@@ -88,8 +58,11 @@ void Game::run() {
     long prevtime;
     long dt;
     // collisions
+    SDL_Point col_angle;
     //SDL_Point col_angle;
-
+    // TEST
+    this->entities.push_back(Entity({700,700},{0,-14},{0,00}));
+    this->entities.push_back(Entity({500,500},{0,10},{0,0}));
     while (running)
     {
         // get delta time
@@ -103,12 +76,19 @@ void Game::run() {
         
         // check for collisions
         for (int i = 0; i < entities.size(); i++) {
-            // check every other entity
             for (int j = i+1; j < entities.size(); j++) {
-                //std::cout << "proped" << std::endl;
-                //col_angle = check_collision(entities[i].get_collider(),entities[j].get_collider());
-                //if (col_angle.x != -1) std::cout << "collision" << std::endl;
-                
+                col_angle = check_collision(entities[i].get_collider(), entities[j].get_collider());
+                if (col_angle.x != NULL_PT.x && !entities[i].get_isColliding()) {
+                    // call on_collision for both entities
+                    // be careful when destroying entities here!!!!
+                    printf("%d %d \n", col_angle.x, col_angle.y);
+                    entities[i].on_collision(col_angle);
+                    entities[j].on_collision(scalar(col_angle,-1));
+                }
+                else if (entities[i].get_isColliding() || entities[j].get_isColliding()) { // should always be equal to each other
+                    entities[i].set_isColliding(false);
+                    entities[j].set_isColliding(false);
+                }
             }
         }
         handle_events();
@@ -128,6 +108,8 @@ void Game::handle_events() {
         case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_ESCAPE)
                     running = false;
+                if (event.key.keysym.sym == SDLK_r)
+                    this->reset();
                 break;
     }
 }
@@ -137,10 +119,17 @@ void Game::render() {
     // render entities
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     for (Entity e : entities) {
-        draw_circle(renderer,e.get_pos().x,e.get_pos().y, 50);
+        if (e.get_isColliding()) SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        else SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+        draw_circle(renderer,e.get_pos().x,e.get_pos().y, e.get_collider().radius);
     }
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderPresent(renderer);
+}
+
+void Game::reset() {
+    this->entities.clear();
+    this->run();
 }
 
 void Game::end() {

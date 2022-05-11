@@ -18,5 +18,6 @@ clean:
 	rm -f $(BUILD_DIR)/$(OBJ_NAME) *.o
 
 run:
+r:
 	$(CC) $(COMPILER_FLAGS)  $(LINKER_FLAGS) $(INCLUDE_PATHS) $(LIBRARY_FLAGS) $(SRC_FILES) -o $(BUILD_DIR)/$(OBJ_NAME)
 	build/debug/play
