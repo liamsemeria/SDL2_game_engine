@@ -14,33 +14,36 @@ colliders are structs
 functions that compare colliders
 */
 
-// circle circle
-SDL_Point check_collision(CircleCollider c0, CircleCollider c1);
-// circle box
-SDL_Point check_collision(BoxCollider c0, CircleCollider c1);
-// box box
-SDL_Point check_collision(BoxCollider c0, BoxCollider c1);
+SDL_Point check_collision(Collider c0, Collider c1);
 
 
 struct  Collider {
     SDL_Point *pos;
-    int n = 1;
     bool active = true;
     bool simulated = true;
+    SDL_Point dim = {-1,-1};
+    std::string type = "abstract";
 };
 
 struct CircleCollider : public Collider{
     int radius;
-    CircleCollider() {radius = -1;}
+    CircleCollider() {}
     CircleCollider(SDL_Point *pos, int radius) {
         this->pos = pos;
         this->radius = radius;
+        this->dim = {radius,radius};
+        this->type = "circle";
     }
 };
 
 struct BoxCollider : public Collider{
-    int w;
-    int h;
+    BoxCollider() {}
+    BoxCollider(SDL_Point* pos, int width, int height) {
+        this->pos = pos;
+        this->dim = {width,height};
+        this->type = "box";
+
+    }
 };
 
 #endif

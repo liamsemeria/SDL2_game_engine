@@ -7,11 +7,15 @@ Entity::Entity(SDL_Point pos, SDL_Point velocity, SDL_Point accel) {
     *this->pos = pos;
     this->velocity = velocity;
     this->acceleration = accel;
-    this->col = CircleCollider(this->pos,20);
+    this->col = new CircleCollider(this->pos,20);
 }
 
 void Entity::update(float dt) {
     *this->pos = {int(pos->x + velocity.x*dt), int(pos->y + velocity.y*dt)};
+    int x,y;
+    SDL_GetMouseState(&x,&y);
+    *pos = {x,y};
+
     this->velocity = {int(velocity.x + acceleration.x*dt), int(velocity.y + acceleration.y*dt)};
     //set_pos({pos.x + velocity.x*, pos.y + velocity.y});
 }

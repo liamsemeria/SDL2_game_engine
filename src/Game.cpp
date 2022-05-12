@@ -73,11 +73,10 @@ void Game::run() {
         for (int i = 0; i < entities.size(); i++) {
             entities[i].update(float(dt) / 100000 ); // need to convert to micro? seconds here
         }
-        
         // check for collisions
         for (int i = 0; i < entities.size(); i++) {
             for (int j = i+1; j < entities.size(); j++) {
-                col_angle = check_collision(entities[i].get_collider(), entities[j].get_collider());
+                col_angle = check_collision(*entities[i].get_collider(), *entities[j].get_collider());
                 if (col_angle.x != NULL_PT.x && !entities[i].get_isColliding()) {
                     // call on_collision for both entities
                     // be careful when destroying entities here!!!!
@@ -85,6 +84,7 @@ void Game::run() {
                     entities[i].on_collision(col_angle);
                     entities[j].on_collision(scalar(col_angle,-1));
                 }
+                // collision exit
                 else if (entities[i].get_isColliding() || entities[j].get_isColliding()) { // should always be equal to each other
                     entities[i].set_isColliding(false);
                     entities[j].set_isColliding(false);
@@ -121,9 +121,9 @@ void Game::render() {
     for (Entity e : entities) {
         if (e.get_isColliding()) SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         else SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-        draw_circle(renderer,e.get_pos().x,e.get_pos().y, e.get_collider().radius);
+        draw_circle(renderer,e.get_pos().x,e.get_pos().y, e.get_collider()->dim.x);
     }
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderPresent(renderer);
 }
 

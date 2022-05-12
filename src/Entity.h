@@ -11,9 +11,9 @@ class Entity {
     SDL_Point* pos;
     SDL_Point velocity;
     SDL_Point acceleration;
-    char* tag;
+    //char* tag;
     // collision stuff
-    CircleCollider col;
+    Collider* col;
     bool colliding = false;
     SDL_Point collision_angle;
 
@@ -28,7 +28,7 @@ class Entity {
         void set_pos(SDL_Point pos) {*this->pos = pos;}
         SDL_Point get_velocity() {return this->velocity;}
         void set_velocity(SDL_Point velocity) {this->velocity = velocity;}
-        CircleCollider get_collider() {return this->col;}
+        Collider* get_collider() {return this->col;}
         bool get_isColliding() {return this->colliding;}
         void set_isColliding(bool b) {this->colliding = b;}
 };
