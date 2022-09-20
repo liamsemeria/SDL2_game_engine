@@ -2,21 +2,28 @@
 #define collider
 
 #include <SDL2/SDL.h>
-#include <iostream>
-
-struct Collider;
-struct CircleCollider;
-struct BoxCollider;
+#include "Component.h"
 
 /*
+REVISE
 namespace:
 colliders are structs
 functions that compare colliders
 */
 
-SDL_Point check_collision(CircleCollider c0, CircleCollider c1);
-SDL_Point check_collision(BoxCollider c0, BoxCollider c1);
+class Collider : public Component {
+    public:
+    SDL_Point *pos;
+    bool active = true;
+    bool simulated = true;
+    SDL_Point dim = {-1,-1};
+    Collider(SDL_Point* pos, SDL_Point dim);
+    void set();
+};
 
+//SDL_Point check_collision(CircleCollider c0, CircleCollider c1);
+SDL_Point check_collision(Collider c0, Collider c1);
+/*
 struct  Collider {
     SDL_Point *pos;
     bool active = true;
@@ -45,5 +52,5 @@ struct BoxCollider : public Collider{
 
     }
 };
-
+*/
 #endif

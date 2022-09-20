@@ -129,7 +129,7 @@ void Game::render() {
         if (e->get_isColliding()) SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         else SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         //draw_circle(renderer,e.get_pos().x,e.get_pos().y, e.get_collider()->dim.x);
-        SDL_Rect r = {e->get_pos().x, e->get_pos().y, e->get_collider()->dim.x, e->get_collider()->dim.y};
+        SDL_Rect r = {e->get_pos().x, e->get_pos().y, e->get_dim().x, e->get_dim().y};
         SDL_RenderDrawRect(renderer, &r);
         if (SDL_RenderCopy(renderer,e->get_image(),NULL,&r)!=0) {printf("%s\n",SDL_GetError());running=false;}
     }
