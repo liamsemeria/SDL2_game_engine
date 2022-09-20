@@ -57,12 +57,7 @@ void Game::run() {
     long time = std::chrono::system_clock::now().time_since_epoch().count();
     long prevtime;
     long dt;
-    // collisions
-    SDL_Point col_angle;
     //SDL_Point col_angle;
-    // TEST
-    this->entities.push_back(Entity({700,700},{0,-14},{0,00}));
-    this->entities.push_back(Entity({500,500},{0,10},{0,0}));
     while (running)
     {
         // get delta time
@@ -73,14 +68,23 @@ void Game::run() {
         for (int i = 0; i < entities.size(); i++) {
             entities[i].update(float(dt) / 100000 ); // need to convert to micro? seconds here
         }
-        // check for collisions
+        handle_events();
+        handle_collisions();
+        render();
+    }
+    end();
+}
+
+void Game::handle_collisions() {
+    // collisions
+    SDL_Point col_angle;
+    // check for collisions
         for (int i = 0; i < entities.size(); i++) {
             for (int j = i+1; j < entities.size(); j++) {
                 col_angle = check_collision(*entities[i].get_collider(), *entities[j].get_collider());
                 if (col_angle.x != NULL_PT.x && !entities[i].get_isColliding()) {
                     // call on_collision for both entities
                     // be careful when destroying entities here!!!!
-                    printf("%d %d \n", col_angle.x, col_angle.y);
                     entities[i].on_collision(col_angle);
                     entities[j].on_collision(scalar(col_angle,-1));
                 }
@@ -91,15 +95,15 @@ void Game::run() {
                 }
             }
         }
-        handle_events();
-        render();
-    }
-    end();
 }
 
 void Game::handle_events() {
     SDL_Event event;
     SDL_PollEvent(&event);
+    for (int i = 0; i < entities.size(); i++) {
+        entities[i].on_event(event);
+    }
+    // general events
     switch (event.type)
     {
         case SDL_QUIT:
@@ -121,7 +125,9 @@ void Game::render() {
     for (Entity e : entities) {
         if (e.get_isColliding()) SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         else SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-        draw_circle(renderer,e.get_pos().x,e.get_pos().y, e.get_collider()->dim.x);
+        //draw_circle(renderer,e.get_pos().x,e.get_pos().y, e.get_collider()->dim.x);
+        SDL_Rect r = {e.get_pos().x, e.get_pos().y, e.get_collider()->dim.x, e.get_collider()->dim.y};
+        SDL_RenderDrawRect(renderer, &r);
     }
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderPresent(renderer);

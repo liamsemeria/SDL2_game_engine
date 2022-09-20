@@ -7,14 +7,14 @@ Entity::Entity(SDL_Point pos, SDL_Point velocity, SDL_Point accel) {
     *this->pos = pos;
     this->velocity = velocity;
     this->acceleration = accel;
-    this->col = new CircleCollider(this->pos,20);
+    this->col = new BoxCollider(this->pos,20,20);
 }
 
 void Entity::update(float dt) {
     *this->pos = {int(pos->x + velocity.x*dt), int(pos->y + velocity.y*dt)};
-    int x,y;
-    SDL_GetMouseState(&x,&y);
-    *pos = {x,y};
+    //int x,y;
+    //SDL_GetMouseState(&x,&y);
+    //*pos = {x,y};
 
     this->velocity = {int(velocity.x + acceleration.x*dt), int(velocity.y + acceleration.y*dt)};
     //set_pos({pos.x + velocity.x*, pos.y + velocity.y});
@@ -27,3 +27,7 @@ void Entity::on_collision(SDL_Point angle) {
     velocity = scalar(angle,-1);
     colliding = true;
 } // meant to be overloaded
+
+void Entity::on_event(SDL_Event event) {
+    //if (event.type == SDL_MOUSEBUTTONDOWN) {printf("balls");}
+}

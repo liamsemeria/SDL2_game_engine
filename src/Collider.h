@@ -14,8 +14,8 @@ colliders are structs
 functions that compare colliders
 */
 
-SDL_Point check_collision(Collider c0, Collider c1);
-
+SDL_Point check_collision(CircleCollider c0, CircleCollider c1);
+SDL_Point check_collision(BoxCollider c0, BoxCollider c1);
 
 struct  Collider {
     SDL_Point *pos;

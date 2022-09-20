@@ -36,6 +36,7 @@ class Game {
         Game(Game const&);
         void operator=(Game const &);
         void render();
+        void handle_collisions();
         void handle_events();
         void end();
 };
