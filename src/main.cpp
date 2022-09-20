@@ -5,8 +5,10 @@
 //CircleCollider* col(CircleCollider* c) {return c;}
 
 int main() {
-        Game::get_instance().instantiate(Entity({500,500},{10,0},{0,0}));
-        Game::get_instance().instantiate(Entity({600,500},{00,0},{0,0}));
+        Entity* e = new Entity({500,500},{10,0},{0,0},"assets/a0.png");
+        Entity* e1 = new Entity({600,500},{00,0},{0,0},"assets/img.png");
+        Game::get_instance().instantiate(e);
+        Game::get_instance().instantiate(e1);
 
         Game::get_instance().run();
         // things to research:

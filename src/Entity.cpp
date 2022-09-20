@@ -2,12 +2,18 @@
 #include "Game.h"
 #include "helpers.h"
 
-Entity::Entity(SDL_Point pos, SDL_Point velocity, SDL_Point accel) {
+Entity::Entity(SDL_Point pos, SDL_Point velocity, SDL_Point accel, const char* imgpath) {
     this->pos = new SDL_Point(); 
     *this->pos = pos;
     this->velocity = velocity;
     this->acceleration = accel;
+    this->imgpath = imgpath;
     this->col = new BoxCollider(this->pos,20,20);
+    
+}
+
+Entity::~Entity() {
+    SDL_DestroyTexture(this->image);
 }
 
 void Entity::update(float dt) {
@@ -15,7 +21,6 @@ void Entity::update(float dt) {
     //int x,y;
     //SDL_GetMouseState(&x,&y);
     //*pos = {x,y};
-
     this->velocity = {int(velocity.x + acceleration.x*dt), int(velocity.y + acceleration.y*dt)};
     //set_pos({pos.x + velocity.x*, pos.y + velocity.y});
 }
@@ -30,4 +35,12 @@ void Entity::on_collision(SDL_Point angle) {
 
 void Entity::on_event(SDL_Event event) {
     //if (event.type == SDL_MOUSEBUTTONDOWN) {printf("balls");}
+}
+
+void Entity::set_image(SDL_Renderer* renderer) {
+    SDL_Surface* s = IMG_Load(this->imgpath);
+    if (s==NULL) {printf("couldnt load image at %s \n",this->imgpath); return;}
+    this->image = SDL_CreateTextureFromSurface(renderer, s);
+    assert(this->image!=NULL);
+    SDL_FreeSurface(s);
 }

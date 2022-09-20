@@ -12,6 +12,8 @@ class Entity {
     SDL_Point* pos;
     SDL_Point velocity;
     SDL_Point acceleration;
+    SDL_Texture* image = NULL;
+    const char* imgpath;
     // behavior
     
     // collision stuff
@@ -21,7 +23,8 @@ class Entity {
 
     public:
         Entity();
-        Entity(SDL_Point pos, SDL_Point velocity, SDL_Point accel);
+        Entity(SDL_Point pos, SDL_Point velocity, SDL_Point accel, const char* imgpath);
+        ~Entity();
         void update(float dt); // called every frame
         void render();
         void on_collision(SDL_Point angle); // called whenever the entity collides with another
@@ -35,6 +38,8 @@ class Entity {
         BoxCollider* get_collider() {return this->col;}
         bool get_isColliding() {return this->colliding;}
         void set_isColliding(bool b) {this->colliding = b;}
+        SDL_Texture* get_image() {return this->image;}
+        void set_image(SDL_Renderer* renderer); 
 };
 
 #endif

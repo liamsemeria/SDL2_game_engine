@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <vector>
 #include <chrono>
 // homemade
@@ -21,7 +22,7 @@ class Game {
     SDL_Renderer *renderer;
     SDL_Texture *texture;
     // engine
-    std::vector<Entity> entities;
+    std::vector<Entity*> entities;
     float time_passed;
 
     public:
@@ -29,8 +30,9 @@ class Game {
         void run();
         void reset();
         // call these to interact with game entities
-        void instantiate(Entity e);
+        void instantiate(Entity* e);
         void destroy(Entity e);
+        SDL_Renderer* get_renderer() {return this->renderer;}
     private:
         Game();
         Game(Game const&);

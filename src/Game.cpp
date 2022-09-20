@@ -3,7 +3,8 @@
 
 // public functions
 
-void Game::instantiate(Entity e) {
+void Game::instantiate(Entity* e) {
+    e->set_image(this->renderer);
     this->entities.push_back(e);
 }
 
@@ -44,6 +45,8 @@ Game::Game() {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
     // create texture
     texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STATIC, sizex, sizey);
+    // init image
+    IMG_Init(IMG_INIT_PNG);
 }
 
 Game& Game::get_instance() {
@@ -66,7 +69,7 @@ void Game::run() {
         dt = time - prevtime;
         // update entities
         for (int i = 0; i < entities.size(); i++) {
-            entities[i].update(float(dt) / 100000 ); // need to convert to micro? seconds here
+            entities[i]->update(float(dt) / 100000 ); // need to convert to micro? seconds here
         }
         handle_events();
         handle_collisions();
@@ -81,17 +84,17 @@ void Game::handle_collisions() {
     // check for collisions
         for (int i = 0; i < entities.size(); i++) {
             for (int j = i+1; j < entities.size(); j++) {
-                col_angle = check_collision(*entities[i].get_collider(), *entities[j].get_collider());
-                if (col_angle.x != NULL_PT.x && !entities[i].get_isColliding()) {
+                col_angle = check_collision(*entities[i]->get_collider(), *entities[j]->get_collider());
+                if (col_angle.x != NULL_PT.x && !entities[i]->get_isColliding()) {
                     // call on_collision for both entities
                     // be careful when destroying entities here!!!!
-                    entities[i].on_collision(col_angle);
-                    entities[j].on_collision(scalar(col_angle,-1));
+                    entities[i]->on_collision(col_angle);
+                    entities[j]->on_collision(scalar(col_angle,-1));
                 }
                 // collision exit
-                else if (entities[i].get_isColliding() || entities[j].get_isColliding()) { // should always be equal to each other
-                    entities[i].set_isColliding(false);
-                    entities[j].set_isColliding(false);
+                else if (entities[i]->get_isColliding() || entities[j]->get_isColliding()) { // should always be equal to each other
+                    entities[i]->set_isColliding(false);
+                    entities[j]->set_isColliding(false);
                 }
             }
         }
@@ -101,7 +104,7 @@ void Game::handle_events() {
     SDL_Event event;
     SDL_PollEvent(&event);
     for (int i = 0; i < entities.size(); i++) {
-        entities[i].on_event(event);
+        entities[i]->on_event(event);
     }
     // general events
     switch (event.type)
@@ -121,16 +124,18 @@ void Game::handle_events() {
 void Game::render() {
     SDL_RenderClear(renderer);
     // render entities
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    for (Entity e : entities) {
-        if (e.get_isColliding()) SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        else SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    for (Entity* e : entities) {
+        if (e->get_isColliding()) SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        else SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         //draw_circle(renderer,e.get_pos().x,e.get_pos().y, e.get_collider()->dim.x);
-        SDL_Rect r = {e.get_pos().x, e.get_pos().y, e.get_collider()->dim.x, e.get_collider()->dim.y};
+        SDL_Rect r = {e->get_pos().x, e->get_pos().y, e->get_collider()->dim.x, e->get_collider()->dim.y};
         SDL_RenderDrawRect(renderer, &r);
+        if (SDL_RenderCopy(renderer,e->get_image(),NULL,&r)!=0) {printf("%s\n",SDL_GetError());running=false;}
     }
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderPresent(renderer);
+    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 0);
+    //SDL_RenderPresent(renderer);
 }
 
 void Game::reset() {
@@ -143,4 +148,5 @@ void Game::end() {
     SDL_DestroyWindow(window);
     SDL_DestroyTexture(texture);
     SDL_Quit();
+    IMG_Quit();
 }

@@ -2,6 +2,7 @@
 #define helpers
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <iostream>
 
     // Calculations
@@ -20,5 +21,8 @@
     // draws a filled circle
     // based off of: https://stackoverflow.com/questions/38334081/howto-draw-circles-arcs-and-vector-graphics-in-sdl
     void draw_circle(SDL_Renderer * renderer, int32_t centreX, int32_t centreY, int32_t radius);
+    
+    // returns texture of image path
+    SDL_Texture* load_img(char* filepath,SDL_Renderer* renderer);
 
 #endif
