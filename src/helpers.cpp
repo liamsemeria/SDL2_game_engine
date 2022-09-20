@@ -51,8 +51,10 @@ void draw_circle(SDL_Renderer * renderer, int32_t centreX, int32_t centreY, int3
         //else draw_circle(renderer, centreX, centreY, radius-1);
     }
 
-SDL_Texture* load_img(char* filepath, SDL_Renderer* renderer) {
+SDL_Texture* load_img(const char* filepath, SDL_Renderer* renderer) {
     SDL_Surface* s = IMG_Load(filepath);
-    if (s==NULL) {printf("couldnt load image at %s",filepath); return NULL;}
-    return SDL_CreateTextureFromSurface(renderer, s);
+    if (s==NULL) {printf("couldnt load image at %s \n",filepath); SDL_FreeSurface(s); return NULL;}
+    SDL_Texture* t = SDL_CreateTextureFromSurface(renderer, s);
+    SDL_FreeSurface(s);
+    return t;
 }

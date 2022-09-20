@@ -15,7 +15,8 @@ class Entity {
     SDL_Point acceleration;
     SDL_Point dim;
     SDL_Texture* image = NULL;
-    const char* imgpath;
+    SpriteState* s;
+    std::vector<const char*> imgpaths;
     // behavior
     
     // collision stuff
@@ -27,7 +28,7 @@ class Entity {
 
     public:
         Entity();
-        Entity(SDL_Point pos, SDL_Point velocity, SDL_Point dim, const char* imgpath);
+        Entity(SDL_Point pos, SDL_Point velocity, SDL_Point dim, std::vector<const char*> imgpaths);
         ~Entity();
         void update(float dt); // called every frame
         void render();
@@ -42,11 +43,12 @@ class Entity {
         void set_velocity(SDL_Point velocity) {this->velocity = velocity;}
         SDL_Point get_dim() {return this->dim;}
         void set_dim(SDL_Point dim) {this->dim = dim;}
+        void create_collider(SDL_Point dim) {this->col = new Collider(this->pos, dim);}
         Collider* get_collider() {return this->col;}
         bool get_isColliding() {return this->colliding;}
         void set_isColliding(bool b) {this->colliding = b;}
-        SDL_Texture* get_image() {return this->image;}
-        void set_image(SDL_Renderer* renderer); 
+        SDL_Texture* get_image() {if (s!=NULL)return s->sprite(); else return NULL;}
+        void set_sprites(SDL_Renderer* renderer, float period); 
 };
 
 #endif

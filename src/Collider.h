@@ -5,9 +5,7 @@
 #include "Component.h"
 
 /*
-REVISE
-namespace:
-colliders are structs
+collider class
 functions that compare colliders
 */
 

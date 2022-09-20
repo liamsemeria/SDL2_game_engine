@@ -23,6 +23,6 @@
     void draw_circle(SDL_Renderer * renderer, int32_t centreX, int32_t centreY, int32_t radius);
     
     // returns texture of image path
-    SDL_Texture* load_img(char* filepath,SDL_Renderer* renderer);
+    SDL_Texture* load_img(const char* filepath,SDL_Renderer* renderer);
 
 #endif

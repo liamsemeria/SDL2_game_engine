@@ -4,7 +4,8 @@
 // public functions
 
 void Game::instantiate(Entity* e) {
-    e->set_image(this->renderer);
+    //std::vector<const char*> paths = {"assets/a0.png","assets/a1.png"};
+    e->set_sprites(this->renderer,1);
     this->entities.push_back(e);
 }
 
@@ -83,7 +84,9 @@ void Game::handle_collisions() {
     SDL_Point col_angle;
     // check for collisions
         for (int i = 0; i < entities.size(); i++) {
+            if (entities[i]->get_collider()==NULL) continue;
             for (int j = i+1; j < entities.size(); j++) {
+                if (entities[j]->get_collider()==NULL) continue;
                 col_angle = check_collision(*entities[i]->get_collider(), *entities[j]->get_collider());
                 if (col_angle.x != NULL_PT.x && !entities[i]->get_isColliding()) {
                     // call on_collision for both entities

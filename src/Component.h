@@ -4,20 +4,24 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <vector>
 
 class Component {
     public:
     bool active;
     Component() {active = false;};
     virtual ~Component() {}
-    //virtual void set() {};
 };
 
-class Sprite : public Component {
-    SDL_Texture* img;
+class SpriteState : public Component {
+    int state = 0;
+    float period;
+    float t = 0;
+    std::vector<SDL_Texture*> img_states;
     public:
-    Sprite();
-    void set();
+    SpriteState(SDL_Renderer* renderer, std::vector<const char*> paths, float period);
+    void update(float dt);
+    SDL_Texture* sprite();
 };
 
 #endif
